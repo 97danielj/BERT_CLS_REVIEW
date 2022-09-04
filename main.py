@@ -1,4 +1,3 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -15,6 +14,8 @@ SCROLL_PAUSE_SEC = 1
 from crawling import *
 from find_element import *
 from scrollbody import *
+
+
 
 def main(key_word, page_num):
     review_dic = dict()
@@ -47,13 +48,15 @@ def main(key_word, page_num):
 
     driver.implicitly_wait(WAIT)
     page_down(40, driver)
-    sleep(1)
+    sleep(SCROLL_PAUSE_SEC)
     driver.implicitly_wait(SCROLL_PAUSE_SEC)
     page_down(5, driver)
-    sleep(1)
-    driver.execute_script("window.scrollTo(0, 0);")
-
-    store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq.icT4K > a:nth-child(1)')
+    sleep(SCROLL_PAUSE_SEC)
+    page_up(40,driver)
+    sleep(SCROLL_PAUSE_SEC)
+    page_up(5,driver)
+    sleep(SCROLL_PAUSE_SEC)
+    store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq > a:nth-child(1)')
     print('total store_list : ', len(store_elements))  # 매장리스트 접근
     # 체크포인트
     ck_pt_idx = 0
@@ -62,17 +65,19 @@ def main(key_word, page_num):
         while True:
             try:  # 이상한 오류가 뜰경우 현재위치 까지 저장 하고, 크롤링 인덱스 반환
                 store_name = crawling(driver, ck_pt_idx, store_elements, review_dic)
-                sleep(2)
-                print('현재 크롤링 중인 매장 인덱스와 매장명 : ', ck_pt_idx, store_name)
+                print('현재 크롤링 중인 매장 인덱스와 매장명 : ', ck_pt_idx,store_name)
                 ck_pt_idx += 1
+                sleep(0.5)
                 switch_frame('searchIframe', driver)
+
 
                 # 한 refresh를 벗어나는 조건문
                 if len(review_dic[store_name]['review']) >= 500:
                     break
+
             except:
                 # json 파일로 저장
-                with open(f'./naver/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
+                with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
                     json.dump(review_dic, f, indent=4, ensure_ascii=False)
                 return ck_pt_idx
 
@@ -80,20 +85,22 @@ def main(key_word, page_num):
         if ck_pt_idx == len(store_elements) - 1:
             break
 
+        print('새로고침을 진행합니다.')
         driver.refresh()
         driver.implicitly_wait(1)
         switch_frame('searchIframe', driver)
-        sleep(0.5)
+        sleep(SCROLL_PAUSE_SEC)
         page_down(40, driver)
-        sleep(1)
+        sleep(SCROLL_PAUSE_SEC)
         driver.implicitly_wait(1)
         page_down(5, driver)
-        sleep(0.5)
-        store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq.icT4K > a:nth-child(1)')
+        sleep(SCROLL_PAUSE_SEC)
+        store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq > a:nth-child(1)')
+        print('total store_list', len(store_elements))
 
+    print('크롤링을 저장하고, 종료합니다.')
     # json 파일로 저장
     with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
         json.dump(review_dic, f, indent=4, ensure_ascii=False)
 
-
-main('울산 횟집', 1)
+main('인천 횟집', 1)

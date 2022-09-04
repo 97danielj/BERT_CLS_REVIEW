@@ -17,6 +17,7 @@ SCROLL_PAUSE_SEC = 1
 # frame 변경 메소드
 def switch_frame(frame,driver):
     driver.switch_to.default_content()  # frame 초기화
+    driver.implicitly_wait(1)
     driver.switch_to.frame(frame)  # frame 변경
     driver.implicitly_wait(1)
 

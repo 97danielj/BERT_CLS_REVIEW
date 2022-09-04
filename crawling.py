@@ -31,8 +31,7 @@ def crawling_menu_review(driver):
 
         try:
             # 오른족 버튼 찾기
-            right_btn = driver.find_element(By.CSS_SELECTOR,
-                                            'div.place_fixed_subtab > div > div:nth-child(1) > div > div > a.ZCqf_.aNw43')
+            right_btn = driver.find_element(By.CSS_SELECTOR, 'div.place_fixed_subtab > div > div:nth-child(1) > div > div > a.ZCqf_.aNw43')
             driver.implicitly_wait(WAIT)
         except:
             pass
@@ -43,7 +42,7 @@ def crawling_menu_review(driver):
             while True:
                 if menu_elements[i].text != '':  # 요소가 존재하고 메뉴 텍스트도 보일때
                     menu_list.append(menu_elements[i].text)
-                    if i == len(menu_elements) - 1:  # 메뉴 리스트 길이면 나온나
+                    if i == len(menu_elements) - 1:  # 메뉴 리스트 길이면 나온다.
                         break
                     i += 1
                 else:
@@ -102,29 +101,33 @@ def crawling_menu_review(driver):
 
 
 def crawling(driver, i, store_elements, review_dic):
-    driver.implicitly_wait(1)
+    sleep(1)
     store_elements[i].click()  # li의 스토어를 클릭
     driver.implicitly_wait(WAIT)  # 2초 휴식
+    return_name = None
     try:
         # 다른 iframe으로 변경
         switch_frame('entryIframe', driver)
-        time_wait(2, 'span.Fc1rA', driver)
+        sleep(1)
+        time_wait(3, 'span.Fc1rA', driver)
         try:
             # -----매장명 가져오기-----
             store_name = driver.find_element(By.CSS_SELECTOR, 'span.Fc1rA').text
             driver.implicitly_wait(2)
             review_dic[store_name] = dict()
+
         except:
             print('매장명 가져오기 오류')
             pass
 
         # -----평점 가져오기-----
         try:
+            sleep(0.5)
             rank = driver.find_element(By.CSS_SELECTOR, 'div.zD5Nm.f7aZ0 > div.dAsGb > span.PXMot.LXIwF > em')
             driver.implicitly_wait(WAIT)
             review_dic[store_name]['rank'] = rank.text
         except:
-            print('리뷰 가져오기 오류')
+            print('평점이 없습니다.')
             pass
 
         # --------위치 가져오기---------
