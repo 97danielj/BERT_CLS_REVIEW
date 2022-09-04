@@ -6,8 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import re
 import json
-WAIT = 3
-SCROLL_PAUSE_SEC = 1
+import sys
+
 #options = webdriver.ChromeOptions()
 #options.add_argument('headless')
 
@@ -15,9 +15,12 @@ from crawling import *
 from find_element import *
 from scrollbody import *
 
+WAIT = 3
+SCROLL_PAUSE_SEC = 1
 
 
 def main(key_word, page_num):
+    sys.stdout = open(f'./Crawling2/{key_word}_{page_num}.txt','w')
     review_dic = dict()
     page_num = page_num - 1
     refresh_count = 0
@@ -102,5 +105,6 @@ def main(key_word, page_num):
     # json 파일로 저장
     with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
         json.dump(review_dic, f, indent=4, ensure_ascii=False)
+    sys.stdout.close()
 
-main('인천 횟집', 1)
+main('대구 횟집', 1)
