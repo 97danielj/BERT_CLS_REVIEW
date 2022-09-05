@@ -49,3 +49,17 @@ def find_review_btn(driver):
             return menu_list[-2]
     except:
         print('리뷰가 존재하지 않습니다.')
+
+
+
+
+def find_page_btn(driver, page_num):
+    pages = driver.find_elements(By.CSS_SELECTOR, 'a.mBN2s')
+    if page_num <= 5:
+        pages[page_num].click()
+        sleep(1)
+    else:
+        driver.find_elements(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+        driver.implicitly_wait(WAIT)
+        driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+        driver.implicitly_wait(WAIT)

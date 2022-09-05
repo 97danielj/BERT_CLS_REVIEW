@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import re
 import json
-import sys
+
 
 #options = webdriver.ChromeOptions()
 #options.add_argument('headless')
@@ -20,10 +20,9 @@ SCROLL_PAUSE_SEC = 1
 
 
 def main(key_word, page_num):
-    sys.stdout = open(f'./Crawling2/{key_word}_{page_num}.txt','w')
     review_dic = dict()
     page_num = page_num - 1
-    refresh_count = 0
+    #refresh_count = 0
 
     url = 'https://map.naver.com/v5/search'
     driver = webdriver.Chrome('./chromedriver')
@@ -36,19 +35,10 @@ def main(key_word, page_num):
 
     # 프레임 변경
     switch_frame('searchIframe', driver)
-    driver.implicitly_wait(WAIT)
+    sleep(0.5)
 
     # 페이지 버튼 찾기
-    pages = driver.find_elements(By.CSS_SELECTOR, 'a.mBN2s')
-    if page_num <= 5:
-        pages[page_num].click()
-        sleep(1)
-    else:
-        driver.find_elements(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
-        driver.implicitly_wait(WAIT)
-        driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
-        driver.implicitly_wait(WAIT)
-
+    find_page_btn(driver, page_num)
     driver.implicitly_wait(WAIT)
     page_down(40, driver)
     sleep(SCROLL_PAUSE_SEC)
@@ -90,8 +80,10 @@ def main(key_word, page_num):
 
         print('새로고침을 진행합니다.')
         driver.refresh()
-        driver.implicitly_wait(1)
+        driver.implicitly_wait(WAIT)
         switch_frame('searchIframe', driver)
+        find_page_btn(driver, page_num)
+
         sleep(SCROLL_PAUSE_SEC)
         page_down(40, driver)
         sleep(SCROLL_PAUSE_SEC)
@@ -105,6 +97,8 @@ def main(key_word, page_num):
     # json 파일로 저장
     with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
         json.dump(review_dic, f, indent=4, ensure_ascii=False)
-    sys.stdout.close()
 
-main('대구 횟집', 1)
+key_word_list = ['서울 횟집', '인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
+main(key_word_list[0],2)
+
+
