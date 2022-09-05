@@ -1,9 +1,9 @@
 WAIT = 3
 SCROLL_PAUSE_SEC = 1
-#options = webdriver.ChromeOptions()
-#options.add_argument('headless')
+
 from find_element import *
 from scrollbody import *
+
 
 def crawling_menu_review(driver):
     # -----리뷰 버튼 클릭-------
@@ -60,7 +60,7 @@ def crawling_menu_review(driver):
             while True:
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 sleep(1)
-                driver.implicitly_wait(SCROLL_PAUSE_SEC)
+                driver.implicitly_wait(WAIT)
 
                 # if view_more_count ==19:
                 # break

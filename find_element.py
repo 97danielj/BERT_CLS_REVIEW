@@ -1,17 +1,13 @@
-import time
-from selenium import webdriver
+
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
-from bs4 import BeautifulSoup
-import re
-import json
+
 WAIT = 3
 SCROLL_PAUSE_SEC = 1
-#options = webdriver.ChromeOptions()
-#options.add_argument('headless')
+
 
 # css 찾을때 까지 10초대기
 def time_wait(num, code,driver):
@@ -43,9 +39,30 @@ def find_review_btn(driver):
     sleep(2)
     try:
         menu_list = driver.find_elements(By.CSS_SELECTOR,'a.tpj9w')
-        if len(menu_list) ==7:
-            return menu_list[-1]
+        driver.implicitly_wait(3)
+        #개수가 7개인 경우 리뷰 버튼 고정되어있지 않다.
+        if len(menu_list) == 7:
+            if menu_list[-1].text == '리뷰':
+                return menu_list[-1]
+            elif menu_list[-2].text == '리뷰':
+                return menu_list[-2]
+            else:
+                return menu_list[-3]
         else:
             return menu_list[-2]
     except:
-        print('리뷰가 존재하지 않습니다.')
+        print('리뷰버튼이 존재하지 않습니다.')
+
+
+
+
+def find_page_btn(driver, page_num):
+    pages = driver.find_elements(By.CSS_SELECTOR, 'a.mBN2s')
+    if page_num <= 5:
+        pages[page_num].click()
+        sleep(1)
+    else:
+        driver.find_elements(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+        driver.implicitly_wait(WAIT)
+        driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+        driver.implicitly_wait(WAIT)
