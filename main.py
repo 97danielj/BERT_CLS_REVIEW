@@ -93,6 +93,7 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
         print('새로고침을 진행합니다.')
         driver.refresh()
         driver.implicitly_wait(WAIT)
+        sleep(0.5)
         switch_frame('searchIframe', driver)
         find_page_btn(driver, page_num)
 
@@ -118,6 +119,7 @@ key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟�
 
 for key_word in key_word_list:
     naver_crawling(key_word, 4)
+
 
 
 
