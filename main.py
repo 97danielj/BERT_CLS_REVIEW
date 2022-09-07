@@ -18,6 +18,7 @@ from scrollbody import *
 WAIT = 3
 SCROLL_PAUSE_SEC = 1
 
+
 def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
     # 매장 정보를 저장할 딕셔너리 구조체
@@ -68,10 +69,9 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
                 switch_frame('searchIframe', driver)
                 # 리뷰가 많을 경우 refresh()를 위해 벗어나는 조건문
                 if len(review_dic[store_name]['review']) >= 500:
-                    ck_pt_idx += 1
                     break
-
-                ck_pt_idx += 1
+                else:
+                    ck_pt_idx += 1
 
             # 예상치 못한 오류가 뜨는 경우
             except:
@@ -87,6 +87,8 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
         # 새로고침 반복을 나오는 조건문
         if ck_pt_idx == len(store_elements) - 1:
             break
+        else:
+            ck_pt_idx += 1
 
         print('새로고침을 진행합니다.')
         driver.refresh()
@@ -115,7 +117,8 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 
 for key_word in key_word_list:
-    naver_crawling(key_word, 2)
+    naver_crawling(key_word, 4)
+
 
 
 
