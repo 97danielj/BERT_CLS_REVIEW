@@ -52,13 +52,17 @@ def find_review_btn(driver):
 
 def find_page_btn(driver, page_num):
     pages = driver.find_elements(By.CSS_SELECTOR, 'a.mBN2s')
-    if page_num <= 4:
-        pages[page_num].click()
-        sleep(1)
-    else:
-        driver.find_elements(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
-        driver.implicitly_wait(WAIT)
-        sleep(0.5)
-        driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
-        driver.imlicitly_wait(WAIT)
-        sleep(0.5)
+    try:
+        if page_num <= 4:
+            pages[page_num].click()
+            sleep(1)
+        else:
+            driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+            driver.implicitly_wait(WAIT)
+            sleep(0.5)
+            driver.find_element(By.CSS_SELECTOR, 'div.zRM9F > a:nth-child(6)').click()
+            driver.implicitly_wait(WAIT)
+            sleep(0.5)
+    except:
+        print(f'해당 {page_num+1}페이지가 존재 하지 않습니다.')
+        pass
