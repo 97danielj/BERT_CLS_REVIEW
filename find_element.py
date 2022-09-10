@@ -42,7 +42,7 @@ def find_review_btn(driver):
     for menu_btn in menu_list:
         if menu_btn.text == '리뷰':
             return menu_btn
-    print('리뷰버튼이 존재하지 않습니다.')
+    return
 
 
 
