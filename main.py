@@ -24,6 +24,9 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
     # 매장 정보를 저장할 딕셔너리 구조체
     review_dic = dict()
+    if ck_pt_idx != 0:
+        with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num}.json', 'r', encoding='utf-8') as f:
+            review_dic = json.load(f)
 
     page_num = page_num - 1
 
@@ -50,10 +53,12 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
     driver.implicitly_wait(SCROLL_PAUSE_SEC)
     page_down(5, driver)
     sleep(SCROLL_PAUSE_SEC)
-    page_up(40,driver)
-    sleep(SCROLL_PAUSE_SEC)
-    page_up(5,driver)
-    sleep(SCROLL_PAUSE_SEC)
+
+    if ck_pt_idx == 0:
+        page_up(40, driver)
+        sleep(SCROLL_PAUSE_SEC)
+        page_up(5,driver)
+        sleep(SCROLL_PAUSE_SEC)
     store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq > a:nth-child(1)')
     print('total store_list : ', len(store_elements))  # 매장리스트 접근
 
@@ -95,6 +100,9 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
         driver.refresh()
         driver.implicitly_wait(WAIT)
         sleep(0.5)
+        driver.refresh()
+        driver.implicitly_wait(WAIT)
+        sleep(0.5)
         switch_frame('searchIframe', driver)
         find_page_btn(driver, page_num)
 
@@ -119,9 +127,11 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 #key_word_list = ['부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 #for key_word in key_word_list:
-    #naver_crawling(key_word, 6)
-naver_crawling(key_word_list[2], 3)
-#naver_crawling(key_word_list[2], 3)
+#    naver_crawling(key_word, 5)
+#for key_word in key_word_list:
+#    naver_crawling(key_word, 4)
+
+naver_crawling(key_word_list[-1] , 5, 34)
 
 
 
