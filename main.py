@@ -1,13 +1,3 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
-import re
-import json
-
-
 #options = webdriver.ChromeOptions()
 #options.add_argument('headless')
 
@@ -25,16 +15,21 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
     # 매장 정보를 저장할 딕셔너리 구조체
     review_dic = dict()
     if ck_pt_idx != 0:
-        with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num}.json', 'r', encoding='utf-8') as f:
+        with open(f'./naver/naver_{key_word}_review_dic_page{page_num}.json', 'r', encoding='utf-8') as f:
             review_dic = json.load(f)
 
     page_num = page_num - 1
 
     #크롬 드라이버 열기
+    #options = webdriver.ChromeOptions()
+    # options.add_argument('--headless')
     url = 'https://map.naver.com/v5/search'
     driver = webdriver.Chrome('./chromedriver')
     driver.get(url)
     driver.implicitly_wait(2)
+    driver.maximize_window()
+    driver.implicitly_wait(WAIT)
+    sleep(WAIT)
 
     #검색창 찾기
     find_search_input(key_word, driver=driver)
@@ -82,7 +77,7 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
             # 예상치 못한 오류가 뜨는 경우
             except:
                 # json파일 저장
-                with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
+                with open(f'./naver/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
                     json.dump(review_dic, f, indent=4, ensure_ascii=False)
                 #현재 driver는 닫기
                 driver.close()
@@ -117,7 +112,7 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
     print('크롤링을 저장하고, 종료합니다.')
     # json 파일로 저장
-    with open(f'./Crawling2/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
+    with open(f'./naver/naver_{key_word}_review_dic_page{page_num + 1}.json', 'w', encoding='utf-8') as f:
         json.dump(review_dic, f, indent=4, ensure_ascii=False)
 
     driver.close()
@@ -126,12 +121,14 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
 key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 #key_word_list = ['부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
-#for key_word in key_word_list:
-#    naver_crawling(key_word, 5)
-#for key_word in key_word_list:
-#    naver_crawling(key_word, 4)
+'''for page_num in range(4,7):
+    for key_word in key_word_list:
+        naver_crawling(key_word, page_num)
+'''
+naver_crawling(key_word_list[-1], 3)
 
-naver_crawling(key_word_list[-1] , 5, 34)
+
+
 
 
 

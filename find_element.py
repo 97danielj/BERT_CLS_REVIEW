@@ -24,7 +24,7 @@ def time_wait(num, code,driver):
 def find_search_input(key_word,driver):
     # 검색창 찾기
     driver.switch_to.default_content()
-    time_wait(2, 'div.input_box > input.input_search',driver)
+    time_wait(5, 'div.input_box > input.input_search',driver)
     search = driver.find_element(By.CSS_SELECTOR,'div.input_box > input.input_search')
     search.send_keys(key_word)  # 검색어 입력
     driver.implicitly_wait(3)
