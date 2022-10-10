@@ -1,5 +1,3 @@
-#options = webdriver.ChromeOptions()
-#options.add_argument('headless')
 
 import json
 from selenium import webdriver
@@ -7,7 +5,7 @@ from crawling2 import *
 from find_element import *
 from scrollbody import *
 
-WAIT = 3
+WAIT = 2
 SCROLL_PAUSE_SEC = 1
 
 
@@ -28,10 +26,8 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
     url = 'https://map.naver.com/v5/search'
     driver = webdriver.Chrome('./chromedriver')
     driver.get(url)
-    driver.implicitly_wait(2)
     driver.maximize_window()
     driver.implicitly_wait(WAIT)
-    sleep(WAIT)
 
     #검색창 찾기
     find_search_input(key_word, driver=driver)
@@ -39,23 +35,22 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
     # 프레임 변경
     switch_frame('searchIframe', driver)
-    sleep(0.5)
+    sleep(1)
 
     # 페이지 버튼 찾기
     find_page_btn(driver, page_num)
     driver.implicitly_wait(WAIT)
 
     page_down(40, driver)
-    sleep(SCROLL_PAUSE_SEC)
     driver.implicitly_wait(SCROLL_PAUSE_SEC)
     page_down(5, driver)
-    sleep(SCROLL_PAUSE_SEC)
+    driver.implicitly_wait(SCROLL_PAUSE_SEC)
 
     if ck_pt_idx == 0:
         page_up(40, driver)
-        sleep(SCROLL_PAUSE_SEC)
+        driver.implicitly_wait(SCROLL_PAUSE_SEC)
         page_up(5,driver)
-        sleep(SCROLL_PAUSE_SEC)
+        driver.implicitly_wait(SCROLL_PAUSE_SEC)
     store_elements = driver.find_elements(By.CSS_SELECTOR, 'div.ouxiq > a:nth-child(1)')
     print('total store_list : ', len(store_elements))  # 매장리스트 접근
 
@@ -68,7 +63,7 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
                 if ck_pt_idx == len(store_elements) -1:
                     break
 
-                sleep(0.5)
+                sleep(1)
                 switch_frame('searchIframe', driver)
                 # 리뷰가 많을 경우 refresh()를 위해 벗어나는 조건문
                 if len(review_dic[store_name]['review']) >= 500:
@@ -95,10 +90,8 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
         print('새로고침을 진행합니다.')
         driver.refresh()
-        driver.implicitly_wait(WAIT)
         sleep(0.5)
         driver.refresh()
-        driver.implicitly_wait(WAIT)
         sleep(0.5)
         switch_frame('searchIframe', driver)
         find_page_btn(driver, page_num)
@@ -123,9 +116,11 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
 
 key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 
-for page_num in range(1,7):
+
+for page_num in range(1,3):
     for key_word in key_word_list:
         naver_crawling(key_word, page_num)
+
 
 
 

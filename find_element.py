@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 
-WAIT = 3
+WAIT = 2
 SCROLL_PAUSE_SEC = 1
 
 
@@ -15,9 +15,10 @@ def time_wait(num, code,driver):
         wait = WebDriverWait(driver, num).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, code)))
     except:
-        print(code, '태그를 찾지 못하였습니다.')
-        driver.quit()
+        #driver.quit()
+        return False
     return wait
+
 
 
 
@@ -43,9 +44,6 @@ def find_review_btn(driver):
         if menu_btn.text == '리뷰':
             return menu_btn
     return
-
-
-
 
 
 

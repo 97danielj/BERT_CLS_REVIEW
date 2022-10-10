@@ -1,11 +1,11 @@
-WAIT = 3
+WAIT = 4
 SCROLL_PAUSE_SEC = 1
 
 from find_element import *
 from scrollbody import *
 
 
-def crawling_menu_review(driver):
+def crawling_review_rank(driver):
     #menu_list = list()
     review_list = list()
     review_rank_list = list()
@@ -21,46 +21,37 @@ def crawling_menu_review(driver):
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 sleep(1)
                 driver.implicitly_wait(WAIT)
-
-                # if view_more_count ==19:
-                # break
-                try:
-                    # 더보기 버튼 클릭
-                    driver.implicitly_wait(WAIT)
-                    driver.find_element(By.CSS_SELECTOR, 'a.fvwqf').click()
-                    # view_more_count += 1
-
-                except:
-                    # 더보기 버튼이 없다면 while문을 빠져나온다.
+                # 더보기 버튼 클릭
+                btn = time_wait(5, 'a.fvwqf', driver)
+                if btn != False:
+                    btn.click()
+                else:
                     break
-                    # 끝까지 스크롤 다운
 
-                # new_scroll = driver.execute_script("return document.body.scrollHeight")
-                # driver.implicitly_wait(WAIT)
-                # if last_scroll == new_scroll:
-                #    break
-                # else:
-                #    last_scroll= new_scroll
+
 
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
             # 리뷰 리스트
+            #review_elements = time_wait(10, 'li.YeINN', driver)
             review_elements = driver.find_elements(By.CSS_SELECTOR, "li.YeINN")
-            sleep(WAIT)
+            driver.implicitly_wait(SCROLL_PAUSE_SEC)
+            sleep(1)
             # 리뷰 텍스트 크롤링
             for i in review_elements:
                 try:
-                    review_rank = i.find_element(By.CSS_SELECTOR, 'span.P1zUJ.HNG_1 > em').text
+                    review_rank = i.find_element(By.CSS_SELECTOR,'span.P1zUJ.HNG_1 > em').text
                     review_rank_list.append(review_rank)
-                except:  # 평점이 없는 경우
+                except:
+                    pass
                     continue
-
                 try:
                     review_text = i.find_element(By.CSS_SELECTOR, 'div.ZZ4OK > a > span.zPfVt').text
                     review_list.append(review_text)
                 except:
-                    # 평점이 있는데 리뷰가 없는 경우
                     review_list.append(None)
+                    #review_text = i.find_element(By.CSS_SELECTOR, 'div.ZZ4OK > a > span.zPfVt').text
+
         except:
             print('리뷰 크롤링중 오류가 났습니다.')
             pass
@@ -74,7 +65,7 @@ def crawling(driver, i, store_elements, review_dic):
     sleep(1)
     store_elements[i].click()  # li의 스토어를 클릭
     driver.implicitly_wait(WAIT)  # 2초 휴식
-    return_name = None
+
     try:
         # 다른 iframe으로 변경
         switch_frame('entryIframe', driver)
@@ -110,7 +101,7 @@ def crawling(driver, i, store_elements, review_dic):
             print('위치가져오기 오류')
             pass
 
-        memu_list, review_list, review_rank_list = crawling_menu_review(driver)
+        review_list, review_rank_list = crawling_review_rank(driver)
 
     except:
         print('크롤링 함수 오류가 났습니다.')
