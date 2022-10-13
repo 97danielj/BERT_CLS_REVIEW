@@ -114,13 +114,17 @@ def naver_crawling(key_word, page_num, ck_pt_idx = 0):
     sleep(WAIT)
     return
 
+key_word_list_ex = [ '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 key_word_list = ['서울 횟집','인천 횟집', '부산 횟집', '대구 횟집', '광주 횟집', '대전 횟집', '울산 횟집']
 
-
-for page_num in range(1,3):
-    for key_word in key_word_list:
+naver_crawling(key_word_list[1],1,19)
+for page_num in range(1,2):
+    for key_word in key_word_list_ex:
         naver_crawling(key_word, page_num)
 
+for page_num in range(2,4):
+    for key_word in key_word_list:
+        naver_crawling(key_word, page_num)
 
 
 
